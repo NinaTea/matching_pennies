@@ -10,6 +10,7 @@
 
 
 (define-public (commit_play ( hash_played (buff 32)) (amount uint))
+    (if (not (is-eq u32 (len hash_played))) (begin (err "Wrong hash size"))
     (begin 
         (asserts! (not (< amount u1000000)) (err "You have to pay 1 STX"))
         (is-ok (stx-transfer? amount tx-sender (as-contract tx-sender)))
@@ -20,7 +21,7 @@
             (begin (map-set play {j: tx-sender} {hash: hash_played}) 
                 (var-set players_counter  (+ (var-get players_counter ) u1))
                 (ok "Successfully added"))
-            (err "There are already two players!")))
+            (err "There are already two players!"))))
 )
 
 (define-read-only (armar_hash (apuesta bool) (numero uint))
