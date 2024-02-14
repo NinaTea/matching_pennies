@@ -65,9 +65,9 @@
         (begin (is-ok (restart)) (ok "The game was restarted"))
         (begin  
             (asserts! (is-some (map-get? to_pay address)) (err "You did not play or you already got your prize!"))
-            (var-set already_payed_them (+ (var-get already_payed_them) u1))
             (is-ok (as-contract (stx-transfer? (unwrap-panic (map-get? to_pay address)) tx-sender address)))
             (map-delete to_pay address)
+            (var-set already_payed_them (+ (var-get already_payed_them) u1))
             (ok "Everything went smoothly")
         )
     )

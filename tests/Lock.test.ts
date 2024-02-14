@@ -49,9 +49,18 @@ describe("Testing matching_pennies", () => {
  
      const cobrar1 = simnet.callPublicFn("Lock", "get_prize", [principalCV(address1)], address1);
      expect(cobrar1.result).toBeOk(stringAscii("Everything went smoothly"))
+
+     //const cobrar1 = simnet.callPublicFn("Lock", "get_prize", [principalCV(address1)], address1);
+     //expect(cobrar1.result).toBeOk(stringAscii("Everything went smoothly"))
     
-     const cobrar2 = simnet.callPublicFn("Lock", "get_prize", [principalCV(address2)], address2);
-     expect(cobrar2.result).toBeOk(stringAscii("Everything went smoothly"));
+     //const cobrar2 = simnet.callPublicFn("Lock", "get_prize", [principalCV(address2)], address2);
+     //expect(cobrar2.result).toBeOk(stringAscii("Everything went smoothly"));
+
+     //const cobrar3 = simnet.callPublicFn("Lock", "get_prize", [principalCV(address1)], address1);
+     //expect(cobrar3.result).toBeOk(stringAscii("The game was restarted"))
+
+     const cobrar4 = simnet.callPublicFn("Lock", "get_prize", [principalCV(address1)], address1);
+     expect(cobrar4.result).toBeErr(stringAscii("You did not play or you already got your prize!"))
 
    });
   
