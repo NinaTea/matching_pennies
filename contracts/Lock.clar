@@ -6,13 +6,14 @@
 (define-data-var  booleans_played int 0)
 (define-data-var revelations uint u0)
 (define-data-var already_payed_them uint u0)
+(define-data-var pozo uint u0)
 
 
 (define-public (commit_play ( hash_played (buff 32)) (amount uint))
     (begin 
         (asserts! (not (< amount u1000000)) (err "You have to pay 1 STX"))
         (is-ok (stx-transfer? amount tx-sender (as-contract tx-sender)))
-       
+        (var-set pozo  (+ (var-get pozo ) amount))   
         (if (is-eq (var-get players_counter ) u0) (map-set sorted {o:u0} {j:tx-sender}) (map-set sorted {o:u1} {j:tx-sender}))
 
         (if (< (var-get players_counter ) u2)
@@ -49,24 +50,25 @@
             
             (if (is-eq (var-get booleans_played) 0) 
                 (begin (map-set to_pay  primero  u0 ) 
-                    (map-set to_pay  segundo u2000000 ) )
+                    (map-set to_pay  segundo (var-get pozo) ) )
                 (begin (map-set to_pay  segundo u0) 
-                    (map-set to_pay  primero u2000000 ) )
+                    (map-set to_pay  primero (var-get pozo) ) )
             )
         ) 
         (ok true)
     )
 )
 
-(define-public (get_prize (tu_addres principal)) 
+(define-public (get_prize (address principal)) 
     
     (if (>= (var-get already_payed_them) u2)
         (begin (is-ok (restart)) (ok "The game was restarted"))
         (begin  
-            (asserts! (is-some (map-get? to_pay  tu_addres)) (err "You did not play"))
+            (asserts! (is-some (map-get? to_pay address)) (err "You did not play or you already got your prize!"))
             (var-set already_payed_them (+ (var-get already_payed_them) u1))
-            (is-ok (as-contract (stx-transfer? (unwrap-panic (map-get? to_pay  tu_addres)) tx-sender tu_addres)))
-            (ok "Successfull stx-transfer")
+            (is-ok (as-contract (stx-transfer? (unwrap-panic (map-get? to_pay address)) tx-sender address)))
+            (map-delete to_pay address)
+            (ok "Everything went smoothly")
         )
     )
 )
@@ -82,6 +84,7 @@
             (map-delete to_pay  j1)
             (map-delete to_pay  j2)
             (var-set already_payed_them u0)
+            (var-set pozo u0)
             (ok "Successfull restoration")
         )
     ) 

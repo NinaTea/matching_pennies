@@ -48,10 +48,11 @@ describe("Testing matching_pennies", () => {
      expect(resuelve2.result).toBeOk(boolCV(true));
  
      const cobrar1 = simnet.callPublicFn("Lock", "get_prize", [principalCV(address1)], address1);
-     expect(cobrar1.result).toBeOk(stringAscii("Successfull stx-transfer"))
+     expect(cobrar1.result).toBeOk(stringAscii("Everything went smoothly"))
     
      const cobrar2 = simnet.callPublicFn("Lock", "get_prize", [principalCV(address2)], address2);
-     expect(cobrar2.result).toBeOk(stringAscii("Successfull stx-transfer"));
+     expect(cobrar2.result).toBeOk(stringAscii("Everything went smoothly"));
+
    });
   
 
@@ -80,10 +81,10 @@ describe("Testing matching_pennies", () => {
      expect(resuelve2.result).toBeOk(boolCV(true));
  
      const cobrar1 = simnet.callPublicFn("Lock", "get_prize", [principalCV(address1)], address1);
-     expect(cobrar1.result).toBeOk(stringAscii("Successfull stx-transfer"))
+     expect(cobrar1.result).toBeOk(stringAscii("Everything went smoothly"))
     
      const cobrar2 = simnet.callPublicFn("Lock", "get_prize", [principalCV(address2)], address2);
-     expect(cobrar2.result).toBeOk(stringAscii("Successfull stx-transfer"));
+     expect(cobrar2.result).toBeOk(stringAscii("Everything went smoothly"));
 
   });
 
@@ -126,6 +127,9 @@ describe("Testing matching_pennies", () => {
 
   it("Someone who did not play wants to get the prize", () => {
     const jugada2 = simnet.callPublicFn("Lock", "get_prize", [principalCV(address2)], address2);
-    expect(jugada2.result).toBeErr(stringAscii("You did not play"));
+    expect(jugada2.result).toBeErr(stringAscii("You did not play or you already got your prize!"));
+
+    const jugada3 = simnet.callPublicFn("Lock", "get_prize", [principalCV(address2)], address2);
+    expect(jugada3.result).toBeErr(stringAscii("You did not play or you already got your prize!"));
   });
 });
